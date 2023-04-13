@@ -25,11 +25,14 @@ app.use(
 
 //import in the router
 const landingRoutes = require('./routes/landing.js');
+const productRoutes = require('./routes/products.js')
 
 async function main() {
 
 //make us of the landing page routes
 app.use('/',landingRoutes);
+
+app.use('/products', productRoutes)
 
 }
 

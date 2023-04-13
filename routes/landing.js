@@ -8,6 +8,7 @@ const router = express.Router();
 // a router object can contain routes
 router.get("/", (req,res)=>{
     res.send("Welcome");
+
 })
 
 router.get('/about-us', (req,res)=>{
