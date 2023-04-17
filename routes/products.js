@@ -1,8 +1,13 @@
 const express = require('express');
+const { Product } = require('../models');
 const router = express.Router();
 
+
 router.get('/', async(req,res)=>{
-    res.send("All products");
+    //.collection()--access all the rows
+    //.fetch() -- execute the query
+    const products = await Product.collection().fetch();
+    res.send(products.toJSON());
 })
 
 router.get('/create', async(req,res)=>{
