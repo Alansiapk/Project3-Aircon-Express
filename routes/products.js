@@ -1,6 +1,6 @@
 const express = require('express');
 const { Product } = require('../models');
-const { createProductForm } = require('../forms');
+const { createProductForm, bootstrapField } = require('../forms');
 const router = express.Router();
 
 
@@ -17,8 +17,38 @@ router.get('/', async(req,res)=>{
 router.get('/create', async(req,res)=>{
    const form = createProductForm()
    res.render('products/create',{
-    'form':form.toHTML()
+    'form':form.toHTML(bootstrapField)
    })
+})
+
+router.post('/create', async(req,res)=>{
+    //use caolan form to handle request
+    const form = createProductForm();
+    form.handle(req,{
+        "success": async (form) => {
+            //if the form has no errors
+            //to access the data in the form, we use form.data
+            //const x = new ModelX(); then the x refers to ONE ROW IN THE TABLE
+            const product = new Product();
+            product.set('name', form.data.name);
+            product.set('cost', form.data.cost);
+            product.set('description', form.data.description);
+            await product.save();
+            res.redirect('/products');
+        },
+        "empty":async (form) => {
+            //if the form is empty
+            res.render('products/create',{
+                'form':form
+            });
+        },
+        "error":async (form) =>{
+            //if the form has errors in validation
+            res.render('products/create',{
+                'form':form.toHTML(bootstrapField)
+            });
+        }
+    })
 })
 
 
