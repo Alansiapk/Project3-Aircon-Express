@@ -7,7 +7,9 @@ const router = express.Router();
 router.get('/', async(req,res)=>{
     //.collection()--access all the rows
     //.fetch() -- execute the query
-    const products = await Product.collection().fetch();
+    const products = await Product.collection().fetch({
+        withRelated:['brand']
+    });
     res.render('products/index', {
         'products': products.toJSON() 
     })
@@ -43,6 +45,7 @@ router.post('/create', async(req,res)=>{
             product.set('name', form.data.name);
             product.set('cost', form.data.cost);
             product.set('description', form.data.description);
+            product.set('brand_id', form.data.brand_id);
             await product.save();
             res.redirect('/products');
         },
@@ -61,5 +64,90 @@ router.post('/create', async(req,res)=>{
     })
 })
 
+router.get('/:product_id/update', async (req, res) => {
+    // retrieve the product
+    const productId = req.params.product_id
+    const product = await Product.where({
+        'id': productId
+    }).fetch({
+        require: true
+    });
+
+     // fetch all the brands
+     const allBrands = await Brand.fetchAll().map((brand)=>{
+        return [brand.get('id'), brand.get('name')];
+    })
+
+    const productForm = createProductForm(allBrands);
+
+    // fill in the existing values
+    productForm.fields.name.value = product.get('name');
+    productForm.fields.cost.value = product.get('cost');
+    productForm.fields.description.value = product.get('description');
+    productForm.fields.brand_id.value = product.get('brand_id');
+
+    res.render('products/update', {
+        'form': productForm.toHTML(bootstrapField),
+        'product': product.toJSON()
+    })
+
+})
+
+router.post('/:product_id/update', async (req, res) => {
+
+     // fetch all the brands
+     const allBrands = await Brand.fetchAll().map((brand)=>{
+        return [brand.get('id'), brand.get('name')];
+    })
+
+
+    // fetch the product that we want to update
+    const product = await Product.where({
+        'id': req.params.product_id
+    }).fetch({
+        require: true
+    });
+
+    // process the form
+    const productForm = createProductForm(allBrands);
+    productForm.handle(req, {
+        'success': async (form) => {
+            product.set(form.data);
+            product.save();
+            res.redirect('/products');
+        },
+        'error': async (form) => {
+            res.render('products/update', {
+                'form': form.toHTML(bootstrapField),
+                'product': product.toJSON()
+            })
+        }})
+    })
+
+    router.get('/:product_id/delete', async(req,res)=>{
+        // fetch the product that we want to delete
+        const product = await Product.where({
+            'id': req.params.product_id
+        }).fetch({
+            require: true
+        });
+    
+        res.render('products/delete', {
+            'product': product.toJSON()
+        })
+    
+    });
+    
+    router.post('/:product_id/delete', async(req,res)=>{
+        // fetch the product that we want to delete
+        const product = await Product.where({
+            'id': req.params.product_id
+        }).fetch({
+            require: true
+        });
+        await product.destroy();
+        res.redirect('/products')
+    })
+    
 
 module.exports = router
