@@ -22,4 +22,4 @@ const Brand = bookshelf.model('Brand',{
 })
 
 
-module.exports = { Product };
+module.exports = { Product, Brand};
