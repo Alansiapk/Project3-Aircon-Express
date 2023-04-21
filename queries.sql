@@ -16,4 +16,7 @@ INSERT INTO products (name, cost, description,brand_id) VALUES
 
 ("Daikin"), ("Mitsubishi"), ("LG"), ("Media"), ("Toshiba");
 
-insert into categories (name) VALUES ("4-Tick"), ("5-Tick")
+insert into categories (name) VALUES ("3-Tick"), ("4-Tick"), ("5-Tick")
+
+ INSERT INTO tags (name) VALUES
+ ("Smart WIFI Control"), ("R32 Refrigerant"), ("PM2.5 filters"), ("3D Airflow Control");

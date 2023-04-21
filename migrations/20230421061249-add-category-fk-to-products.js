@@ -15,11 +15,11 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.addColumn('products', 'category_id',{
+  return db.addColumn('products', 'category_id', { 
       'type':'int',
       'unsigned': true,
-      'notNull':true,
-      'defaultValue': 1,
+      'defaultValue': 6,
+      'notNull': true,
       'foreignKey': {
         'name':'product_category_fk',
         'table':'categories',
@@ -35,7 +35,7 @@ exports.up = function(db) {
 
 
 exports.down = function(db) {
-  db.removeForeignKey("products", "product_category_fk");
+  return null;
 }
 
 exports._meta = {
