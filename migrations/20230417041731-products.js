@@ -34,6 +34,16 @@ exports.up = function(db) {
         notNull:true
       },
       description:'text',
+      // category_id:{
+      //   type:'int',
+      //   unsigned:true,
+      //   notNull: false,
+      // },
+      // brand_id:{
+      //   type:'int',
+      //   unsigned:true,
+      //   notNull: false,
+      // }
   })
 };
 

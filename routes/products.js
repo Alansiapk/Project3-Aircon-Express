@@ -54,6 +54,7 @@ router.post('/create', async(req,res)=>{
             product.set('cost', form.data.cost);
             product.set('description', form.data.description);
             product.set('brand_id', form.data.brand_id);
+            product.set('category_id', form.data.category_id);
             await product.save();
             res.redirect('/products');
         },

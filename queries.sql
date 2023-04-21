@@ -15,3 +15,5 @@ INSERT INTO products (name, cost, description,brand_id) VALUES
 ("LG ArtCool Series", 2800, "System 3 for 3 room flat, 2 bedroom and 1 living",3);
 
 ("Daikin"), ("Mitsubishi"), ("LG"), ("Media"), ("Toshiba");
+
+insert into categories (name) VALUES ("4-Tick"), ("5-Tick")

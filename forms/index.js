@@ -53,7 +53,7 @@ const createProductForm = (brands, categories) => {
             choices: brands
         }),
         'category_id': fields.string({
-            label:'Category',
+            label:'NEA Tick Rating',
             required: true,
             errorAfterField: true,
             cssClasses: {
