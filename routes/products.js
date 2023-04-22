@@ -5,13 +5,17 @@ const router = express.Router();
 
 
 router.get('/', async (req, res) => {
+
+ 
+
     //.collection()--access all the rows
     //.fetch() -- execute the query
     const products = await Product.collection().fetch({
         withRelated: ['brand', 'category', 'tags']
     });
     res.render('products/index', {
-        'products': products.toJSON()
+        'products': products.toJSON(),
+       
     })
 
 })
@@ -69,7 +73,8 @@ router.post('/create', async (req, res) => {
             if (tags) {
                 await product.tags().attach(tags.split(","));
             }
-
+            //display a flash massage
+            req.flash("success_messages", `New Product ${product.get('name')} has been created`)
             res.redirect('/products');
         },
         "empty": async (form) => {

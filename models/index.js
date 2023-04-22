@@ -41,6 +41,8 @@ const Tag = bookshelf.model('Tag',{
     }
 })
 
+const User = bookshelf.model('User',{
+    tableName: 'users'
+})
 
-
-module.exports = { Product, Brand, Category, Tag};
+module.exports = { Product, Brand, Category, Tag, User};
