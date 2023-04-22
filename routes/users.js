@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+// import in the CheckIfAuthenticated middleware
+const { checkIfAuthenticated } = require('../middlewares');
 // import in the User model
 const { User } = require('../models');
 
@@ -60,12 +62,12 @@ router.post('/login', function(req,res){
             });
 
             if (!user) {
-                res.status(403);
+                res.status(403); //forbidden
                 req.flash('error', "Unable to authenticate your details");
                 res.redirect('/users/login');
             } else {
                 // 2. check if the password matches
-                if (user.get('password') === generateHashedPassword(form.data.password)) {
+                if (user.get('password') === (form.data.password)) {
                               
                 // 3. if the user exists and the password matches, save the user id into the session
                 //    (additionally, can save extra info) 
@@ -98,6 +100,25 @@ router.post('/login', function(req,res){
     })
    
 });
+
+router.get('/profile', [checkIfAuthenticated], (req, res) => {
+    const user = req.session.user;
+    if (!user) {
+        req.flash('error_messages', 'You do not have permission to view this page');
+        res.redirect('/users/login');
+    } else {
+        res.render('users/profile',{
+            'user': user
+        })
+    }
+
+})
+
+router.get('/logout', (req, res) => {
+    req.session.user = null;
+    req.flash('success_messages', "Goodbye");
+    res.redirect('/users/login');
+})
 
 module.exports = router;
 
