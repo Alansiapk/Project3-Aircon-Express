@@ -10,7 +10,8 @@
             <th>Cost</th>
             <th>Description</th>
             <th>Tags</th>
-            <th></th>
+            <th>Images</th>
+          
         </tr>
     </thead>
     <tbody>
@@ -27,6 +28,11 @@
             </td>
             <td>
                 {{this.category.name}}
+            </td>
+            <td>
+                {{#if image_url}}
+                <img src="{{image_url}}" class="image-fluid"/>
+        {{/if}}
             </td>
             <td>
                 {{this.cost}}
