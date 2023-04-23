@@ -1,12 +1,21 @@
 const express = require("express");
 const router = express.Router();
-
+const crypto = require('crypto');
 // import in the CheckIfAuthenticated middleware
+
 const { checkIfAuthenticated } = require('../middlewares');
 // import in the User model
 const { User } = require('../models');
-
 const { createUserForm, bootstrapField, createLoginForm } = require('../forms');
+
+
+const generateHashedPassword = (password) => {
+    //hashing algo(sha256 is the name of algo)
+    const sha256 = crypto.createHash('sha256');
+    //generated the hashed password
+    const hash = sha256.update(password).digest('base64');
+    return hash;
+}
 
 router.get('/signup', (req,res)=>{
     // display the registration form
@@ -22,7 +31,7 @@ router.post('/signup', (req, res) => {
         success: async (form) => {
             const user = new User({
                 'username': form.data.username,
-                'password': form.data.password,
+                'password': generateHashedPassword(form.data.password),
                 'email': form.data.email
             });
             await user.save();
@@ -67,7 +76,7 @@ router.post('/login', function(req,res){
                 res.redirect('/users/login');
             } else {
                 // 2. check if the password matches
-                if (user.get('password') === (form.data.password)) {
+                if (user.get('password') === generateHashedPassword(form.data.password)) {
                               
                 // 3. if the user exists and the password matches, save the user id into the session
                 //    (additionally, can save extra info) 

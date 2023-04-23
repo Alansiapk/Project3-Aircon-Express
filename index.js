@@ -4,6 +4,8 @@ const wax = require("wax-on");
 const session = require('express-session');
 const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
+const csrf = require('csurf');
+
 
 require("dotenv").config();
 
@@ -38,6 +40,18 @@ app.use(session({
 //set up after sessions
 app.use(flash());
 
+//enable csrf
+app.use(csrf());
+
+app.use(function (err, req, res, next) {
+  if (err && err.code == "EBADCSRFTOKEN") {
+      req.flash('error_messages', 'The form has expired. Please try again');
+      res.redirect('back');
+  } else {
+      next()
+  }
+});
+
 // Register Flash middleware
 app.use(function (req, res, next) {
   res.locals.success_messages = req.flash("success_messages");
@@ -45,10 +59,19 @@ app.use(function (req, res, next) {
   next();
 });
 
+// Share CSRF with hbs files
+app.use(function(req,res,next){
+  res.locals.csrfToken = req.csrfToken();
+  next();
+})
+
 //import in the router
 const landingRoutes = require('./routes/landing.js');
 const productRoutes = require('./routes/products.js');
 const userRoutes = require('./routes/users.js');
+
+
+
 
 async function main() {
 

@@ -3,9 +3,11 @@
 {{#block 'content'}}
 <h1>Log In</h1>
 <form method="POST">
+ <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
+
     {{{form}}}
 
-<input type="submit" class="btn btn-primary mt-3" value="Login"/>
-{{/block}}
+    <input type="submit" class="btn btn-primary mt-3" value="Login" />
+    {{/block}}
 
-{{/extends}}
+    {{/extends}}
